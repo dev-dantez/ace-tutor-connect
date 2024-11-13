@@ -1,12 +1,19 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import Navigation from "../components/Navigation";
+import HeroSection from "../components/HeroSection";
+import SearchBar from "../components/SearchBar";
+import FeaturedTutors from "../components/FeaturedTutors";
+import SubjectGrid from "../components/SubjectGrid";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-white">
+      <Navigation />
+      <HeroSection />
+      <div className="relative -mt-8 px-4 z-20">
+        <SearchBar />
       </div>
+      <FeaturedTutors />
+      <SubjectGrid />
     </div>
   );
 };

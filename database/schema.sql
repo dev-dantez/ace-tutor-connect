@@ -2,22 +2,33 @@
 CREATE DATABASE IF NOT EXISTS tutor_marketplace;
 USE tutor_marketplace;
 
--- Subjects table
-CREATE TABLE subjects (
-    subject_id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    category VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Tutors table
-CREATE TABLE tutors (
-    tutor_id INT PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
+-- Users table (base table for authentication)
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    user_type ENUM('student', 'tutor') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP NULL
+);
+
+-- Students table
+CREATE TABLE students (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT UNIQUE,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    phone VARCHAR(20),
+    education_level VARCHAR(50),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Tutors table (modified to work with users table)
+CREATE TABLE tutors (
+    tutor_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT UNIQUE,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
     profile_image VARCHAR(255),
     bio TEXT,
     hourly_rate DECIMAL(10,2),
@@ -26,7 +37,17 @@ CREATE TABLE tutors (
     rating DECIMAL(3,2) DEFAULT 0,
     is_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Subjects table
+CREATE TABLE subjects (
+    subject_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    category VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Tutor subjects (many-to-many relationship)
@@ -48,21 +69,3 @@ INSERT INTO subjects (name, category, description) VALUES
 ('Computer Science', 'Technology', 'Programming, algorithms, and computer theory'),
 ('Chemistry', 'Science', 'Organic and inorganic chemistry'),
 ('Spanish', 'Languages', 'Spanish language and culture');
-
--- Create database connection file
-<lov-write file_path="includes/db_connect.php">
-<?php
-$host = 'localhost';
-$dbname = 'tutor_marketplace';
-$username = 'root';
-$password = '';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-    exit();
-}
-?>

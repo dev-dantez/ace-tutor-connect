@@ -69,3 +69,19 @@ INSERT INTO subjects (name, category, description) VALUES
 ('Computer Science', 'Technology', 'Programming, algorithms, and computer theory'),
 ('Chemistry', 'Science', 'Organic and inorganic chemistry'),
 ('Spanish', 'Languages', 'Spanish language and culture');
+
+-- Bookings table
+CREATE TABLE bookings (
+    booking_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    tutor_id INT,
+    subject_id INT,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    status ENUM('pending', 'confirmed', 'cancelled', 'completed') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    FOREIGN KEY (tutor_id) REFERENCES tutors(tutor_id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(subject_id) ON DELETE CASCADE
+);

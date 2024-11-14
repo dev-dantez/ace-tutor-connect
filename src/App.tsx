@@ -8,6 +8,9 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import BookingCalendar from "./components/BookingCalendar";
 import BookingManagement from "./components/BookingManagement";
+import StudentDashboard from "./components/Dashboard/StudentDashboard";
+import TutorDashboard from "./components/Dashboard/TutorDashboard";
+import ChatWindow from "./components/Chat/ChatWindow";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +26,9 @@ const App = () => (
           <Route path="/auth/register" element={<Register />} />
           <Route path="/bookings" element={<BookingManagement userId="1" userType="student" />} />
           <Route path="/tutor/:id/book" element={<BookingCalendar tutorId="1" onBookingConfirmed={() => {}} />} />
+          <Route path="/dashboard/student" element={<StudentDashboard />} />
+          <Route path="/dashboard/tutor" element={<TutorDashboard />} />
+          <Route path="/messages/:recipientId" element={<ChatWindow userId="1" recipientId=":recipientId" />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
